@@ -19,7 +19,6 @@ func InitLogger() {
 	if err != nil {
 		panic(err)
 	}
-
 	logger = log.New(io.MultiWriter(file, os.Stdout), "", log.LstdFlags)
 }
 
@@ -33,18 +32,11 @@ func LogError(err error) {
 func LoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-
 		c.Next()
-
 		end := time.Now()
 		latency := end.Sub(start)
-
 		logTime := end.Format("2006/01/02 - 15:04:05")
 		logMessage := fmt.Sprintf("[%s] %s %s %s %v", logTime, c.ClientIP(), c.Request.Method, c.Request.URL.Path, latency)
-
-		// Print the log message to the txt file
-		//fmt.Println(logMessage)
-		
 		if logger != nil {
 			logger.Println(logMessage + "\n")
 		}
